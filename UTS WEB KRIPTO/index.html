@@ -1,0 +1,162 @@
+<!-- 
+	Inspirasi by [ bl4ckbo7 ]  SC = [ https://github.com/bl4ckbo7/caesar-cipher ]
+	Nama Project: Caesar Cipher berbasis web dengan HTMLxCSSxJS
+
+	MOdified by:
+	Nama		: Ibra Hasan Suraya
+	NIM			: 2010511053
+	Matkul		: Kripto
+-->
+
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD xhtml 1.0 Transitional//EN"
+"http://www.w3.org/TR/DTD/xhtml1-transitional.dtd">
+
+<html lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<!-- Hubungkan ke CSS -->
+		<link href="css\cc_style.css" rel="stylesheet" type="text/css" >
+		<meta charset="UTF-8" />
+		<title>Caesar Cipher</title>
+	</head>
+
+	<body>
+
+		<div id="header">
+			<center><h2 style="font-family:verdana">Kriptografi Caesar Cipher</h2></center>
+		</div>
+
+		<div id="wrapper">
+		<center><form id="encryptForm">
+				<table border="0" cellpadding="5" cellspacing="0">
+
+					<!-- Ini untuk input plain or chiper -->
+					<tr>
+						<td colspan="2" style="text-align:center"><h3>PlainText / CipherText:</h3></td>
+					</tr>
+
+					<tr>
+						<td colspan="2"><textarea id="plaintext" cols="50" rows="10" placeholder="Masukkan PlainText / CipherText disini ..."></textarea></td>
+					</tr>
+
+					<!-- Ini untuk input kunci -->
+					<tr>
+						<td colspan="2" style="text-align:center"><h3>Kunci :</h3></td>
+					</tr>
+
+					<tr>
+						<td colspan="2" style="text-align:center"><input type="text" id="key" placeholder="Masukkan Kunci" style="width:8em" /></td>
+					</tr>
+
+					<!-- Ini untuk pilih ekrp atau dekrip  -->
+					<tr>
+						<td colspan="2" style="text-align:center"><h3>Pilih Proses: </h3></td>
+					</tr>
+
+					<tr>
+						<td style="text-align:center">
+								<!-- Jika ekrp, maka saat memangil fungsi proses, kunci tidak akan diubah -->
+								<input type="button" value="Enkripsi" class="button" onclick="runEncrypt(false);"/>
+						</td>
+						
+						<td style="text-align:center">	
+								<!-- Jika dekrip, maka sebelum memanggil fuingsi proses kunci diubah (26-key)%26 -->
+								<input type="button" value="Dekripsi" class="button" onclick="runEncrypt(true);"/>
+						</td>
+					</tr>
+
+				</table>
+			</form></center>
+		</div>
+		
+		<!-- Script JS  -->
+		<script type="text/javascript">
+		
+			function runEncrypt(isDecrypt){
+				// shift berisi kunci yang diambil pada input html dgn id
+				var shift = document.getElementById("key").value;		
+				// plaintext berisi kalimat yang akan diubah		
+				var plaintext = document.getElementById("plaintext").value;		
+				
+
+				// Peringatan jika plaintext/ciphertext tidak diisi
+				if(plaintext.length==0){
+					alert("PlainText / CipherText masih kosong!!");
+					return;
+				}
+
+				// Peringatan jika kunci tidak diisi
+				if (shift.length == 0){
+					alert("Kunci belum diisi !!");
+					return;
+				}
+
+				// Karena penginputan kunci secara default string, maka diubah dulu
+				// dengan basis 10
+				var key = parseInt(shift, 10);
+
+				// Peringata bila key diluar range 0 - 26
+				if(key < 0 || key >= 26){
+				alert("Kunci diluar range 0-26");
+				return;
+				}
+
+
+				// Peringatan bila key bukan integer
+				if(!/^-?\d+$/.test(shift)){
+					alert("Kunci harus integer / Bilangan bulat");
+					return;
+				}
+			
+				// Jika kita pilih tombol dekrip, maka disini akan berjalan, karena isDecry bernilai true
+				if (isDecrypt) key = (26 - key) % 26;
+
+				// Proses Enkripsi or Deskripsi
+				var plaintext = document.getElementById("plaintext");
+				plaintext.value = caesarShift(plaintext.value, key);
+			}
+			
+			
+			function caesarShift(text, shift) {
+				// Var untuk hasil proses
+				var ciphertext = "";
+				
+				// Loop untuk mengubah tiap huruf
+				for (var i = 0; i < text.length; i++){
+					// ubah tiap huruf menjadi code ASCII
+					var ch = text.charCodeAt(i);
+					
+					// Jika hurufnya lower
+					if(65 <= ch && ch <=  90) {
+						// jadi diubah dulu menjadi abjad index 0 - 25
+						// lalu digeser berdasarkan kunci
+						// lalu di mod dengan 26, agar roll back, jika >26
+						// Ditambah 65, agar sesuai dengan index ASCII
+						// Lalu diubah menjadi string lagi
+						ciphertext += String.fromCharCode((ch - 65 + shift) % 26 + 65);
+					}
+
+					// Jika hurufnya upper
+					else if(97 <= ch && ch <= 122){
+						// sama seperti lower, hanya beda di index ASCII
+						ciphertext += String.fromCharCode((ch - 97 + shift) % 26 + 97);
+					
+					// jika bukan huruf, misal karakter special dan angka
+					}else{
+						ciphertext += text.charAt(i);
+					}
+				}
+
+				// Mengembalikan ke plaintext.value
+				return ciphertext;
+			}  
+		</script>
+		
+		<div id="footer">
+			<br><br><br><br><br><br>
+			<h5>Inspirasi by [ bl4ckbo7 : https://github.com/bl4ckbo7/caesar-cipher ]</h5>	
+			<h5>Modified by Ibra Hasan Suraya [2010511053] - 11 Oktober 2021</h5>	
+		</div>
+	</body>
+</html>
